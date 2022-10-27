@@ -1,48 +1,72 @@
 # think-jump
 
-适用于thinkphp6.1的跳转扩展
 
-## 安装
+Installation
+------------
 
-~~~php
+Use composer to manage your dependencies and download think-jump:
+
+```bash
 composer require hulang/think-jump
-~~~
+```
 
-## 配置
-~~~php
-// 安装之后会在config目录里生成jump.php配置文件
+### 生成配置
+
+系统安装后会自动在 config 目录中生成 jump.php 的配置文件，
+如果系统未生成可在命令行执行
+
+```php
+php think jump:config 
+```
+
+可快速生成配置文件
+
+### 公共配置
+```
+// jump配置
 return [
+    // 默认成功 code
+    'default_success_code'  => 0,
+    // 默认失败 code
+    'default_error_code'    => 1,
+    // 默认输出类型
+    'default_return_type'   => 'html',
+    // 默认AJAX 数据返回格式,可选json xml ...
+    'default_ajax_return'   => 'json',
     // 默认跳转页面对应的模板文件
-    'dispatch_success_tmpl' => app()->getRootPath() . '/vendor/hulang/think-jump/src/tpl/dispatch_jump.tpl',
-    'dispatch_error_tmpl'   => app()->getRootPath() . '/vendor/hulang/think-jump/src/tpl/dispatch_jump.tpl',
+    'dispatch_success_tpl'  => app()->getRootPath() . '/vendor/hulang/think-jump/src/tpl/dispatch_jump.tpl',
+    'dispatch_error_tpl'    => app()->getRootPath() . '/vendor/hulang/think-jump/src/tpl/dispatch_jump.tpl',
 ];
-~~~
+```
 
-## 用法示例
-
-使用 use \hulang\think\Jump; 
-
+Example
+-------
 在所需控制器内引用该扩展即可：
-~~~php
+
+```php
 <?php
 namespace app\controller;
 
 class Index 
 {
-    use \hulang\think\Jump; 
+    use \think\Jump; 
     public function index()
     {
         //return $this->error('error');
         //return $this->success('success','index/index');
         //return $this->redirect('/admin/index/index');
-        return $this->result(['username' => 'hulang', 'sex' => '男']);  
+        return $this->result(['username' => 'byron sampson', 'sex' => '男']);  
     }
 }
-~~~
+
+?>
+```
+
 下面示例我在框架自带的BaseController里引入，以后所有需要使用跳转的类继承自带的基类即可
 
 以下是自带的基类
-~~~php
+----------------------------
+```php
 <?php
 declare (strict_types = 1);
 
@@ -57,6 +81,7 @@ use think\Validate;
  */
 abstract class BaseController
 {
+    use \think\Jump;
     /**
      * Request实例
      * @var \think\Request
@@ -135,17 +160,16 @@ abstract class BaseController
 
         return $v->failException(true)->check($data);
     }
-    use \hulang\think\Jump;
 }
-
-~~~
+```
 
 这里继承BaseController后即可使用success、error、redirect、result方法
 
-~~~php
+```php
 <?php
 
 namespace app\admin\controller;
+
 class Index extends \app\BaseController
 {
     public function demo1()
@@ -211,9 +235,9 @@ class Index extends \app\BaseController
          * @param  array $header 发送的Header信息
          */
         //一般用法
-        return $this->result(['username' => 'hulang', 'sex' => '男']);
+        return $this->result(['username' => 'byron sampson', 'sex' => '男']);
         //完整用法
-        //return $this->result($data=['username' => 'hulang', 'sex' => '男'], $code = 0, $msg = '', $type = '',  $header = []); 
+        //return $this->result($data=['username' => 'byron sampson', 'sex' => '男'], $code = 0, $msg = '', $type = '',  $header = []); 
     }
 }
-~~~
+```

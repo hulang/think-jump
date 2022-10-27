@@ -1,11 +1,11 @@
 {
     "name": "hulang/think-jump",
-    "description": "适用于thinkphp6.0的跳转扩展",
+    "description": "The ThinkPHP6+ Jump Package",
     "license": "Apache-2.0",
     "authors": [
         {
             "name": "hulang",
-            "email": "hulangfy@163.com"
+            "email": "hulang@163.com"
         }
     ],
     "require": {
