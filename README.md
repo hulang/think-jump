@@ -26,9 +26,9 @@ php think jump:config
 // jump配置
 return [
     // 默认成功 code
-    'default_success_code'  => 0,
+    'default_success_code'  => 1,
     // 默认失败 code
-    'default_error_code'    => 1,
+    'default_error_code'    => 0,
     // 默认输出类型
     'default_return_type'   => 'html',
     // 默认AJAX 数据返回格式,可选json xml ...
