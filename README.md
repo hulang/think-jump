@@ -1,5 +1,9 @@
-# think-jump
+## thinkphp6.1+ 跳转扩展包
 
+### 环境
+
+1. php >= 7.2.5
+2. thinkphp >=6.1
 
 Installation
 ------------
