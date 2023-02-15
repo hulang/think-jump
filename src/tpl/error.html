@@ -37,7 +37,7 @@ body{background:#fff;color:#333;font-size:16px;font-family:"Microsoft Yahei","He
     var interval = setInterval(function() {
         var time = --wait.innerHTML;
         if (time <= 0) {
-            location.href = href;
+            window.location.href = href;
             clearInterval(interval);
         }
     }, 1000);
