@@ -12,6 +12,6 @@ return [
     // 默认AJAX 数据返回格式,可选json xml ...
     'default_ajax_return'   => 'json',
     // 默认跳转页面对应的模板文件
-    'dispatch_success_tpl'  => app()->getRootPath() . '/vendor/hulang/think-jump/src/tpl/dispatch_jump.tpl',
-    'dispatch_error_tpl'    => app()->getRootPath() . '/vendor/hulang/think-jump/src/tpl/dispatch_jump.tpl',
+    'dispatch_success_tpl'  => app()->getRootPath() . '/vendor/hulang/think-jump/src/tpl/success.html',
+    'dispatch_error_tpl'    => app()->getRootPath() . '/vendor/hulang/think-jump/src/tpl/error.html',
 ];
