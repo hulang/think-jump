@@ -5,7 +5,7 @@
 1. php >= 7.2.5
 2. thinkphp >=6.1
 
-安装
+### 安装
 
 ```bash
 composer require hulang/think-jump
