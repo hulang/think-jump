@@ -23,7 +23,7 @@ php think jump:config
 可快速生成配置文件
 
 ### 公共配置
-```
+```php
 // jump配置
 return [
     // 默认成功 code
