@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-cn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>跳转提示</title>
+<style>
+*{margin:0;padding:0;}
+body{background:#fff;color:#333;font-size:16px;font-family:"Microsoft Yahei","Helvetica Neue",Helvetica,Arial,sans-serif;}
+.system-message{padding:24px 48px;}
+.system-message h1{margin-bottom:12px;font-weight:400;font-size:100px;line-height:120px;}
+.system-message .jump{padding-top:10px;}
+.system-message .jump a{color:#333;}
+.system-message .error,.system-message .success{font-size:36px;line-height:1.8em;}
+.system-message .detail{display:none;margin-top:12px;font-size:12px;line-height:20px;}
+@media (prefers-color-scheme:dark){
+	body{background-color:#010409;color:#f0f6fc;}
+	.system-message .jump a{color:#58a6ff;}
+}
+</style>
+</head>
+
+<body>
+<div class="system-message">
+    <h1>:)</h1>
+    <p class="success"><?=strip_tags($msg)?></p>
+    <p class="detail"></p>
+    <p class="jump">
+        页面自动 <a id="href" href="<?=$url?>">跳转</a> 等待时间： <b id="wait"><?=$wait?></b>
+    </p>
+</div>
+<script type="text/javascript">
+(function() {
+    var wait = document.getElementById('wait'),
+    href = document.getElementById('href').href;
+    var interval = setInterval(function() {
+        var time = --wait.innerHTML;
+        if (time <= 0) {
+            location.href = href;
+            clearInterval(interval);
+        }
+    }, 1000);
+})();
+</script>
+</body>
+</html>
