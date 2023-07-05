@@ -1,11 +1,11 @@
 {
     "name": "hulang/think-jump",
-    "description": "The ThinkPHP6.1+ jump Package",
+    "description": "The ThinkPHP 8.0.0 jump Package",
     "license": "Apache-2.0",
     "authors": [
         {
             "name": "hulang",
-            "email": "hulang@163.com"
+            "email": "hulangfy@163.com"
         }
     ],
     "require": {
