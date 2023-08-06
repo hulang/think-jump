@@ -16,7 +16,7 @@ class SendConfig extends Command
     public function configure()
     {
         $this->setName('jump:config')
-            ->setDescription('send config to tp folder');
+            ->setDescription('send config to config folder');
     }
 
     public function execute(Input $input, Output $output)
