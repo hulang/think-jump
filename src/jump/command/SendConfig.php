@@ -13,7 +13,6 @@ use think\facade\Env;
 
 class SendConfig extends Command
 {
-
     public function configure()
     {
         $this->setName('jump:config')
