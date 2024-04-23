@@ -13,37 +13,33 @@ composer require hulang/think-jump
 
 ### 生成配置
 
-系统安装后会自动在 config 目录中生成 jump.php 的配置文件，
-如果系统未生成可在命令行执行
-
-```php
-php think jump:config 
-```
-
-可快速生成配置文件
+系统安装后会自动在 config 目录中生成 jump.php 的配置文件
 
 ### 公共配置
 ```php
+<?php
+
 declare(strict_types=1);
 
 return [
     // 成功跳转页面模板文件
     'dispatch_success_tpl'  => app()->getRootPath() . '/vendor/hulang/think-jump/src/tpl/success.html',
     // 成功跳转页停留时间(秒)
-    'default_success_wait' => 3,
+    'default_success_wait'  => 3,
     // 成功跳转 code 值
-    'default_success_code'  => 1,
+    'default_success_code'  => 0,
     // 错误跳转页面模板文件
     'dispatch_error_tpl'    => app()->getRootPath() . '/vendor/hulang/think-jump/src/tpl/error.html',
     // 错误跳转页停留时间(秒)
-    'default_error_wait'   => 3,
+    'default_error_wait'    => 3,
     // 错误跳转 code 值
-    'default_error_code'    => 0,
+    'default_error_code'    => 1,
     // 默认输出类型
     'default_return_type'   => 'html',
     // 默认 AJAX 请求返回数据格式，可用：Json,Jsonp,Xml
     'default_ajax_return'   => 'json',
 ];
+
 ```
 
 Example
