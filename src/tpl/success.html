@@ -9,21 +9,21 @@
 <style>
 *{margin:0;padding:0;}
 body{background:#fff;color:#333;font-size:16px;font-family:"Microsoft Yahei","Helvetica Neue",Helvetica,Arial,sans-serif;}
-.system-message{padding:24px 48px;}
-.system-message h1{margin-bottom:12px;font-weight:400;font-size:100px;line-height:120px;}
-.system-message .jump{padding-top:10px;}
-.system-message .jump a{color:#333;}
-.system-message .error,.system-message .success{font-size:36px;line-height:1.8em;}
-.system-message .detail{display:none;margin-top:12px;font-size:12px;line-height:20px;}
+.think_jump_system_message{padding:24px 48px;}
+.think_jump_system_message h1{margin-bottom:12px;font-weight:400;font-size:100px;line-height:120px;}
+.think_jump_system_message .jump{padding-top:10px;}
+.think_jump_system_message .jump a{color:#333;}
+.think_jump_system_message .error,.think_jump_system_message .success{font-size:36px;line-height:1.8em;}
+.think_jump_system_message .detail{display:none;margin-top:12px;font-size:12px;line-height:20px;}
 @media (prefers-color-scheme:dark){
     body{background-color:#010409;color:#f0f6fc;}
-    .system-message .jump a{color:#58a6ff;}
+    .think_jump_system_message .jump a{color:#58a6ff;}
 }
 </style>
 </head>
 
 <body>
-<div class="system-message">
+<div class="think_jump_system_message">
     <h1>:)</h1>
     <p class="success"><?=strip_tags($msg)?></p>
     <p class="detail"></p>
