@@ -38,7 +38,7 @@ trait Jump
             $url = $_SERVER['HTTP_REFERER'];
         } elseif ($url) {
             // 如果URL不为空,但不是绝对URL,則构建应用内的URL
-            $url = (strpos($url, '://') || 0 === strpos($url, '/')) ? $url : $this->app->route->buildUrl($url);
+            $url = (strpos($url, '://') || 0 === strpos($url, '/')) ? $url : (string)$this->app->route->buildUrl($url);
         }
         // 构建跳转结果数组,包含代码、消息、数据、URL和等待时间
         $result = [
@@ -81,7 +81,7 @@ trait Jump
             $url = $this->app->request->isAjax() ? '' : 'javascript:history.back(-1);';
         } elseif ($url) {
             // 如果提供了URL,则根据URL的形式进行处理,确保URL的正确性
-            $url = (strpos($url, '://') || 0 === strpos($url, '/')) ? $url : $this->app->route->buildUrl($url);
+            $url = (strpos($url, '://') || 0 === strpos($url, '/')) ? $url : (string)$this->app->route->buildUrl($url);
         }
         // 构建错误响应数组,包含错误代码、消息、数据、跳转URL和等待时间
         $result = [
