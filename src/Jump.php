@@ -30,13 +30,13 @@ trait Jump
      * 
      * @access protected
      */
-    protected function success($msg = '', string $url = null, $data = '', int $wait = 3, array $header = [])
+    protected function success($msg = '', $url = '', $data = '', $wait = 3, $header = [])
     {
 
-        if (is_null($url) && isset($_SERVER['HTTP_REFERER'])) {
+        if ((is_null($url) || empty($url)) && isset($_SERVER['HTTP_REFERER'])) {
             // 如果URL为空,且存在HTTP_REFERER,则使用HTTP_REFERER作为跳转URL
             $url = $_SERVER['HTTP_REFERER'];
-        } elseif ($url) {
+        } else {
             // 如果URL不为空,但不是绝对URL,則构建应用内的URL
             $url = (strpos($url, '://') || 0 === strpos($url, '/')) ? $url : (string)$this->app->route->buildUrl($url);
         }
@@ -74,12 +74,12 @@ trait Jump
      * @param array $header 发送的HTTP头信息,允许开发人员自定义HTTP响应头
      * @return mixed|void 返回值取决于响应类型,对于HTML类型,返回渲染后的错误页面;对于其他类型,返回一个包含错误信息的响应对象
      */
-    protected function error($msg = '', string $url = null, $data = '', int $wait = 3, array $header = [])
+    protected function error($msg = '', $url = '', $data = '', $wait = 3, $header = [])
     {
-        if (is_null($url)) {
+        if ((is_null($url) || empty($url))) {
             // 根据是否为AJAX请求,决定错误跳转的URL,默认为返回上一页
             $url = $this->app->request->isAjax() ? '' : 'javascript:history.back(-1);';
-        } elseif ($url) {
+        } else {
             // 如果提供了URL,则根据URL的形式进行处理,确保URL的正确性
             $url = (strpos($url, '://') || 0 === strpos($url, '/')) ? $url : (string)$this->app->route->buildUrl($url);
         }
@@ -117,7 +117,7 @@ trait Jump
      * @param array $header 需要添加到响应中的HTTP头部信息
      * @return mixed|void 返回封装好的响应数据,或者直接抛出HttpResponseException
      */
-    protected function result($data, $code = 0, $msg = '', $type = '', array $header = [])
+    protected function result($data, $code = 0, $msg = '', $type = '', $header = [])
     {
         // 构建返回数据的基本结构,包括返回码、消息、时间和数据
         $result = [
