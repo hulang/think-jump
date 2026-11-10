@@ -22,25 +22,58 @@ composer require hulang/think-jump
 declare(strict_types=1);
 
 return [
-    // 成功跳转页面模板文件
-    'dispatch_success_tpl'  => app()->getRootPath() . '/vendor/hulang/think-jump/src/tpl/success.html',
-    // 成功跳转页停留时间(秒)
-    'default_success_wait'  => 3,
-    // 成功跳转 code 值
-    'default_success_code'  => 0,
-    // 错误跳转页面模板文件
-    'dispatch_error_tpl'    => app()->getRootPath() . '/vendor/hulang/think-jump/src/tpl/error.html',
-    // 错误跳转页停留时间(秒)
-    'default_error_wait'    => 3,
-    // 错误跳转 code 值
-    'default_error_code'    => 1,
-    // 默认输出类型
-    'default_return_type'   => 'html',
-    // 默认 AJAX 请求返回数据格式，可用：Json,Jsonp,Xml
-    'default_ajax_return'   => 'json',
-];
+    // 自定义模板目录（留空则用扩展包内置模板 src/tpl）
+    // 建议指向应用目录，例如把模板复制到 app/view/jump 之后：
+    // 'tpl_path' => app()->getAppPath() . 'view' . DIRECTORY_SEPARATOR . 'jump',
+    'tpl_path'             => '',
 
+    // 成功跳转页面模板文件（留空则按 tpl_path/success.html 或内置 success.html 解析）
+    // 可写绝对路径，也可写相对应用根目录的路径，如 'app/view/jump/success.html'
+    'dispatch_success_tpl' => '',
+    // 成功跳转页停留时间(秒)
+    'default_success_wait' => 3,
+    // 成功跳转 code 值
+    'default_success_code' => 0,
+
+    // 错误跳转页面模板文件（留空则按 tpl_path/error.html 或内置 error.html 解析）
+    'dispatch_error_tpl'   => '',
+    // 错误跳转页停留时间(秒)
+    'default_error_wait'   => 3,
+    // 错误跳转 code 值
+    'default_error_code'   => 1,
+
+    // 默认输出类型
+    'default_return_type'  => 'html',
+    // 默认 AJAX 请求返回数据格式，可用：Json,Jsonp,Xml
+    'default_ajax_return'  => 'json',
+];
 ```
+
+> 模板解析顺序：`dispatch_success_tpl` / `dispatch_error_tpl`（单文件）→ `tpl_path`（目录下的 success.html、error.html）→ 扩展包内置模板。三项都不配置也能正常跳转，不需要在配置里写 `vendor/hulang/think-jump/src/...`。
+
+### 自定义跳转页面模板
+
+不要改 vendor 里的文件，升级会被覆盖。把内置模板复制到应用目录再改：
+
+```bash
+mkdir -p app/view/jump
+cp vendor/hulang/think-jump/src/tpl/*.html app/view/jump/
+```
+
+再在 `config/jump.php` 里指一下目录，文件名保持 `success.html`、`error.html`：
+
+```php
+'tpl_path' => app()->getAppPath() . 'view' . DIRECTORY_SEPARATOR . 'jump',
+```
+
+只换其中一个页面时，也可以只配单文件，其余仍走内置模板：
+
+```php
+'dispatch_error_tpl' => app()->getAppPath() . 'view' . DIRECTORY_SEPARATOR . 'jump' . DIRECTORY_SEPARATOR . 'my_error.html',
+```
+
+模板里可用变量：`$code`、`$msg`、`$data`、`$url`、`$wait`。模板是原生 PHP 写法的 `.html`，直接用 `<?= $msg ?>` 这类短标签即可，不必改成 ThinkPHP 模板语法。
+
 
 Example
 -------

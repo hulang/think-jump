@@ -30,7 +30,7 @@ trait Jump
      * 
      * @access protected
      */
-    protected function success($msg = '', $url = '', $data = '', $wait = 3, $header = [])
+    protected function success($msg = '', $url = '', $data = '', $wait = null, $header = [])
     {
 
         if ((is_null($url) || empty($url)) && isset($_SERVER['HTTP_REFERER'])) {
@@ -46,13 +46,13 @@ trait Jump
             'msg' => $msg,
             'data' => $data,
             'url' => $url,
-            'wait' => $wait,
+            'wait' => null === $wait ? (int) $this->app->config->get('jump.default_success_wait', 3) : $wait,
         ];
         // 根据响应类型,创建相应的响应对象
         $type = $this->getResponseType();
         if ('html' == strtolower($type)) {
             // 如果是HTML响应,使用模板渲染跳转页面
-            $response = Response::create($this->app->config->get('jump.dispatch_success_tpl', $type), 'view')
+            $response = Response::create($this->getTemplatePath('success'), 'view')
                 ->assign($result)->header($header);
         } else {
             // 对于其他类型的响应,直接创建JSON或XML等类型的响应
@@ -74,7 +74,7 @@ trait Jump
      * @param array $header 发送的HTTP头信息,允许开发人员自定义HTTP响应头
      * @return mixed|void 返回值取决于响应类型,对于HTML类型,返回渲染后的错误页面;对于其他类型,返回一个包含错误信息的响应对象
      */
-    protected function error($msg = '', $url = '', $data = '', $wait = 3, $header = [])
+    protected function error($msg = '', $url = '', $data = '', $wait = null, $header = [])
     {
         if ((is_null($url) || empty($url))) {
             // 根据是否为AJAX请求,决定错误跳转的URL,默认为返回上一页
@@ -89,13 +89,13 @@ trait Jump
             'msg' => $msg,
             'data' => $data,
             'url' => $url,
-            'wait' => $wait,
+            'wait' => null === $wait ? (int) $this->app->config->get('jump.default_error_wait', 3) : $wait,
         ];
         // 根据配置和请求类型,决定响应的类型
         $type = $this->getResponseType();
         // 如果是HTML类型响应,则使用配置的错误模板进行渲染
         if ('html' == strtolower($type)) {
-            $response = Response::create($this->app->config->get('jump.dispatch_error_tpl', $type), 'view')
+            $response = Response::create($this->getTemplatePath('error'), 'view')
                 ->assign($result)->header($header);
             // 对于其他类型的响应,直接创建一个包含错误信息的响应对象
         } else {
@@ -127,7 +127,7 @@ trait Jump
             'data' => $data,
         ];
         // 根据传入的类型或者默认配置,确定最终的返回数据类型
-        $type = empty($type) ? $this->app->config->get('jump.default_ajax_return', 'json') : $this->getResponseType();
+        $type = empty($type) ? $this->app->config->get('jump.default_ajax_return', 'json') : $type;
         // 创建响应对象,并设置数据类型和头部信息
         $response = Response::create($result, $type)->header($header);
         // 抛出响应对象,结束当前请求
@@ -154,6 +154,70 @@ trait Jump
         $response->code($code)->with($with);
         // 抛出包含重定向响应的异常,中断当前执行并进行重定向
         throw new HttpResponseException($response);
+    }
+
+    /**
+     * 解析跳转模板文件的绝对路径
+     *
+     * 顺序：配置的单个模板文件 → 配置的模板目录 → 扩展包内置模板。
+     * 不在配置里写死 vendor 路径，包被改名、换目录安装或升级后依旧可用。
+     *
+     * @param string $name success|error
+     * @return string
+     */
+    protected function getTemplatePath(string $name): string
+    {
+        $key = 'error' === $name ? 'dispatch_error_tpl' : 'dispatch_success_tpl';
+        $file = (string) $this->app->config->get('jump.' . $key, '');
+        if ('' !== $file) {
+            return $this->normalizePath($file);
+        }
+
+        $dir = (string) $this->app->config->get('jump.tpl_path', '');
+        if ('' !== $dir) {
+            $dir = rtrim($this->normalizePath($dir), '/\\');
+            $file = $dir . DIRECTORY_SEPARATOR . $name . '.html';
+            if (is_file($file)) {
+                return $file;
+            }
+        }
+
+        return $this->getBuiltinTemplate($name);
+    }
+
+    /**
+     * 扩展包内置模板：以 trait 定义文件所在目录定位，不依赖 vendor 路径
+     *
+     * @param string $name success|error
+     * @return string
+     */
+    protected function getBuiltinTemplate(string $name): string
+    {
+        $dir = dirname((string) (new \ReflectionMethod(self::class, __FUNCTION__))->getFileName());
+        if (!is_dir($dir . DIRECTORY_SEPARATOR . 'tpl') && is_dir(__DIR__ . DIRECTORY_SEPARATOR . 'tpl')) {
+            $dir = __DIR__;
+        }
+
+        return $dir . DIRECTORY_SEPARATOR . 'tpl' . DIRECTORY_SEPARATOR . $name . '.html';
+    }
+
+    /**
+     * 相对路径按应用根目录解析，绝对路径原样返回
+     *
+     * @param string $path
+     * @return string
+     */
+    protected function normalizePath(string $path): string
+    {
+        $path = str_replace('\\', '/', $path);
+        if ('' === $path) {
+            return $path;
+        }
+        if ('/' === $path[0] || preg_match('/^[a-zA-Z]:[\\\\\\/]/', $path)) {
+            return $path;
+        }
+
+        return rtrim(str_replace('\\', '/', (string) $this->app->getRootPath()), '/') . '/' . ltrim($path, '/');
     }
 
     /**
